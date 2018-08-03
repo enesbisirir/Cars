@@ -28,13 +28,58 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.LblMiddle = new System.Windows.Forms.Label();
+            this.LblRight = new System.Windows.Forms.Label();
+            this.LblLeft = new System.Windows.Forms.Label();
+            this.SuspendLayout();
+            // 
+            // LblMiddle
+            // 
+            this.LblMiddle.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.LblMiddle.Location = new System.Drawing.Point(228, 0);
+            this.LblMiddle.Name = "LblMiddle";
+            this.LblMiddle.Size = new System.Drawing.Size(6, 614);
+            this.LblMiddle.TabIndex = 0;
+            // 
+            // LblRight
+            // 
+            this.LblRight.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.LblRight.Location = new System.Drawing.Point(349, 0);
+            this.LblRight.Name = "LblRight";
+            this.LblRight.Size = new System.Drawing.Size(3, 614);
+            this.LblRight.TabIndex = 0;
+            // 
+            // LblLeft
+            // 
+            this.LblLeft.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.LblLeft.Location = new System.Drawing.Point(110, 0);
+            this.LblLeft.Name = "LblLeft";
+            this.LblLeft.Size = new System.Drawing.Size(3, 614);
+            this.LblLeft.TabIndex = 0;
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            this.BackColor = System.Drawing.Color.DarkBlue;
+            this.ClientSize = new System.Drawing.Size(462, 613);
+            this.Controls.Add(this.LblMiddle);
+            this.Controls.Add(this.LblLeft);
+            this.Controls.Add(this.LblRight);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Name = "Form1";
+            this.Text = "Cars";
+            this.Load += new System.EventHandler(this.Form1_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.Label LblMiddle;
+        private System.Windows.Forms.Label LblRight;
+        private System.Windows.Forms.Label LblLeft;
     }
 }
 
