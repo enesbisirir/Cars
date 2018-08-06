@@ -18,13 +18,14 @@ namespace Cars
 
         public Car(CarType carType)
         {
+            // Event handler of lane changer timer
             tmrLaneChanger.Tick += tmrLaneChanger_Tick;
-            CarType = carType;
 
-            // PictureBox info
+            // Define properties of car
             Size = new Size(35, 70);
             SizeMode = PictureBoxSizeMode.StretchImage;
             Velocity = 2;
+            CarType = carType;
 
             if (carType == CarType.Red)
             {

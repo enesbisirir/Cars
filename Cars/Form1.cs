@@ -13,16 +13,19 @@ namespace Cars
     public partial class Form1 : Form
     {
         // TODO: Randomized intervals
-        private Timer tmrLeftObjectSpawner = new Timer() { Interval = 2000 };
-        private Timer tmrRightObjectSpawner = new Timer() { Interval = 1800 };
+        public Timer TmrLeftObjectSpawner = new Timer() { Interval = 500 };
+        public Timer TmrRightObjectSpawner = new Timer() { Interval = 500 };
+        public Timer TmrObjectFaller = new Timer() { Interval = 5 };
+        private List<FallingObject> fallingObjects = new List<FallingObject>();
 
         public Form1()
         {
             InitializeComponent();
 
-            // Event handlers of object spawner timers
-            tmrLeftObjectSpawner.Tick += TmrLeftObjectSpawner_Tick;
-            tmrRightObjectSpawner.Tick += TmrRightObjectSpawner_Tick;
+            // Event handlers
+            TmrLeftObjectSpawner.Tick += TmrLeftObjectSpawner_Tick;
+            TmrRightObjectSpawner.Tick += TmrRightObjectSpawner_Tick;
+            TmrObjectFaller.Tick += TmrObjectFaller_Tick;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -37,10 +40,11 @@ namespace Cars
             Controls.Add(GameManager.Current.YellowCar);
 
             // Start timers to spawn FallingObjects
-            tmrLeftObjectSpawner.Start();
-            tmrRightObjectSpawner.Start();
+            TmrLeftObjectSpawner.Start();
+            TmrRightObjectSpawner.Start();
 
-            // TODO: Start objects' falling
+            // Start objects' falling
+            TmrObjectFaller.Start();
         }
 
         // TODO: Keys will not be hardcoded, 
@@ -58,18 +62,29 @@ namespace Cars
             }
         }
 
-        // Spawn right falling objects
+        // Spawn falling objects at right big lane
         private void TmrRightObjectSpawner_Tick(object sender, EventArgs e)
         {
-            FallingObject fallingObject = new FallingObject(FallingObject.RandomizedFallingObjectType(), FallingObject.RandomizedLane(FallingObjectBigLane.Right));
+            FallingObject fallingObject = new FallingObject(FallingObject.RandomType(), FallingObject.RandomLane(FallingObjectBigLane.Right));
             this.Controls.Add(fallingObject);
+            fallingObjects.Add(fallingObject);
         }
 
-        // Spawn left falling objects
+        // Spawn falling objects at left big lane
         private void TmrLeftObjectSpawner_Tick(object sender, EventArgs e)
         {
-            FallingObject fallingObject = new FallingObject(FallingObject.RandomizedFallingObjectType(), FallingObject.RandomizedLane(FallingObjectBigLane.Left));
+            FallingObject fallingObject = new FallingObject(FallingObject.RandomType(), FallingObject.RandomLane(FallingObjectBigLane.Left));
             this.Controls.Add(fallingObject);
+            fallingObjects.Add(fallingObject);
+        }
+
+        // Makes objects fall
+        private void TmrObjectFaller_Tick(object sender, EventArgs e)
+        {
+            foreach (var fallingObject in fallingObjects)
+            {
+                fallingObject.Top += fallingObject.Velocity;
+            }
         }
     }
 }
