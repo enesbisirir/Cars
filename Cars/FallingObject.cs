@@ -22,6 +22,9 @@ namespace Cars
             TmrIntersectionChecker.Tick += TmrIntersectionChecker_Tick;
             TmrIntersectionChecker.Start();
 
+            // Adds every object instantiated to the list
+            GameManager.Current.fallingObjects.Add(this);
+
             // Define properties of falling object
             ObjectType = objectType;
             SmallLane = lane;
@@ -61,13 +64,13 @@ namespace Cars
             }
         }
 
-        // TODO: Solve memory leak
-        // Disposes FallingObject when its top reaches treshold
-        // it is not set to the ground for test purposes
+        // Disposes FallingObject when it touches to the ground
         private void TmrIntersectionChecker_Tick(object sender, EventArgs e)
         {
-            if (this.Top >= 150)
+            if (this.Top >= Game.GroundY - (Height / 2))
             {
+                this.Image = null;
+                this.TmrIntersectionChecker.Dispose();
                 this.Dispose();
             }
         }

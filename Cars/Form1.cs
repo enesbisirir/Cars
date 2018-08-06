@@ -13,10 +13,9 @@ namespace Cars
     public partial class Form1 : Form
     {
         // TODO: Randomized intervals
-        public Timer TmrLeftObjectSpawner = new Timer() { Interval = 500 };
-        public Timer TmrRightObjectSpawner = new Timer() { Interval = 500 };
+        public Timer TmrLeftObjectSpawner = new Timer() { Interval = 2000 };
+        public Timer TmrRightObjectSpawner = new Timer() { Interval = 1800 };
         public Timer TmrObjectFaller = new Timer() { Interval = 5 };
-        private List<FallingObject> fallingObjects = new List<FallingObject>();
 
         public Form1()
         {
@@ -67,7 +66,6 @@ namespace Cars
         {
             FallingObject fallingObject = new FallingObject(FallingObject.RandomType(), FallingObject.RandomLane(FallingObjectBigLane.Right));
             this.Controls.Add(fallingObject);
-            fallingObjects.Add(fallingObject);
         }
 
         // Spawn falling objects at left big lane
@@ -75,13 +73,12 @@ namespace Cars
         {
             FallingObject fallingObject = new FallingObject(FallingObject.RandomType(), FallingObject.RandomLane(FallingObjectBigLane.Left));
             this.Controls.Add(fallingObject);
-            fallingObjects.Add(fallingObject);
         }
 
         // Makes objects fall
         private void TmrObjectFaller_Tick(object sender, EventArgs e)
         {
-            foreach (var fallingObject in fallingObjects)
+            foreach (var fallingObject in GameManager.Current.fallingObjects)
             {
                 fallingObject.Top += fallingObject.Velocity;
             }
