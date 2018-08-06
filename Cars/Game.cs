@@ -9,6 +9,7 @@ namespace Cars
 {
     class Game
     {
+        public static Game Current = new Game();
         public Car RedCar { get; set; }
         public Car YellowCar { get; set; }
         public List<FallingObject> fallingObjects = new List<FallingObject>();

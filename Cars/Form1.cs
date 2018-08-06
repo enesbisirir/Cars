@@ -35,8 +35,8 @@ namespace Cars
             LblRight.Left = (ClientSize.Width / 4 * 3) - (LblRight.Width / 2);
 
             // Spawn Cars
-            Controls.Add(GameManager.Current.RedCar);
-            Controls.Add(GameManager.Current.YellowCar);
+            Controls.Add(Game.Current.RedCar);
+            Controls.Add(Game.Current.YellowCar);
 
             // Start timers to spawn FallingObjects
             TmrLeftObjectSpawner.Start();
@@ -52,12 +52,12 @@ namespace Cars
         {
             if (e.KeyValue == (char)Keys.A)
             {
-                GameManager.Current.RedCar.ChangeLane();
+                Game.Current.RedCar.ChangeLane();
             }
 
             else if (e.KeyValue == (char)Keys.K)
             {
-                GameManager.Current.YellowCar.ChangeLane();
+                Game.Current.YellowCar.ChangeLane();
             }
         }
 
@@ -78,7 +78,7 @@ namespace Cars
         // Makes objects fall
         private void TmrObjectFaller_Tick(object sender, EventArgs e)
         {
-            foreach (var fallingObject in GameManager.Current.fallingObjects)
+            foreach (var fallingObject in Game.Current.fallingObjects)
             {
                 fallingObject.Top += fallingObject.Velocity;
             }

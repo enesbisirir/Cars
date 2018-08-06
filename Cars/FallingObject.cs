@@ -23,7 +23,7 @@ namespace Cars
             TmrIntersectionChecker.Start();
 
             // Adds every object instantiated to the list
-            GameManager.Current.fallingObjects.Add(this);
+            Game.Current.fallingObjects.Add(this);
 
             // Define properties of falling object
             ObjectType = objectType;
@@ -81,7 +81,7 @@ namespace Cars
         /// <returns>Enum of FallingObjectType</returns>
         public static FallingObjectType RandomType()
         {
-            int randomHolder = GameManager.Current.Random.Next(1, 3);
+            int randomHolder = Game.Current.Random.Next(1, 3);
             if (randomHolder == 1)
             {
                 return FallingObjectType.Good;
@@ -99,7 +99,7 @@ namespace Cars
         /// <returns>Integer between 1 and 4</returns>
         public static int RandomLane(FallingObjectBigLane bigLane)
         {
-            int randomHolder = GameManager.Current.Random.Next(1, 3);
+            int randomHolder = Game.Current.Random.Next(1, 3);
             if (bigLane == FallingObjectBigLane.Left)
             {
                 return randomHolder;
