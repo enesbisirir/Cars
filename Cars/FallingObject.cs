@@ -62,6 +62,8 @@ namespace Cars
         }
 
         // TODO: Solve memory leak
+        // Disposes FallingObject when its top reaches treshold
+        // it is not set to the ground for test purposes
         private void TmrIntersectionChecker_Tick(object sender, EventArgs e)
         {
             if (this.Top >= 150)
