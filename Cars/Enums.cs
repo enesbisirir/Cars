@@ -31,4 +31,13 @@ namespace Cars
         Left,
         Right
     }
+
+    enum CollisionType
+    {
+        GoodTouchesGround,
+        GoodTouchesCar,
+        BadTouchesGround,
+        BadTouchesCar,
+        None
+    }
 }

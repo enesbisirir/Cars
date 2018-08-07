@@ -13,9 +13,8 @@ namespace Cars
     public partial class Form1 : Form
     {
         // TODO: Randomized intervals
-        public Timer TmrLeftObjectSpawner = new Timer() { Interval = 2000 };
-        public Timer TmrRightObjectSpawner = new Timer() { Interval = 1800 };
-        public Timer TmrObjectFaller = new Timer() { Interval = 5 };
+        public static Timer TmrLeftObjectSpawner = new Timer() { Interval = 2000 };
+        public static Timer TmrRightObjectSpawner = new Timer() { Interval = 1800 };
 
         public Form1()
         {
@@ -24,7 +23,7 @@ namespace Cars
             // Event handlers
             TmrLeftObjectSpawner.Tick += TmrLeftObjectSpawner_Tick;
             TmrRightObjectSpawner.Tick += TmrRightObjectSpawner_Tick;
-            TmrObjectFaller.Tick += TmrObjectFaller_Tick;
+            Game.Current.Scored += OnScored;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -35,15 +34,13 @@ namespace Cars
             LblRight.Left = (ClientSize.Width / 4 * 3) - (LblRight.Width / 2);
 
             // Spawn Cars
-            Controls.Add(Game.Current.RedCar);
-            Controls.Add(Game.Current.YellowCar);
+            foreach (var car in Game.Current.Cars)
+            {
+                Controls.Add(car);
+            }
 
-            // Start timers to spawn FallingObjects
-            TmrLeftObjectSpawner.Start();
-            TmrRightObjectSpawner.Start();
-
-            // Start objects' falling
-            TmrObjectFaller.Start();
+            // Start game
+            Game.Current.Start();
         }
 
         // TODO: Keys will not be hardcoded, 
@@ -61,6 +58,12 @@ namespace Cars
             }
         }
 
+        // Update UI when scored
+        private void OnScored(object sender, EventArgs e)
+        {
+            LblScore.Text = Game.Current.score.ToString();
+        }
+
         // Spawn falling objects at right big lane
         private void TmrRightObjectSpawner_Tick(object sender, EventArgs e)
         {
@@ -73,15 +76,6 @@ namespace Cars
         {
             FallingObject fallingObject = new FallingObject(FallingObject.RandomType(), FallingObject.RandomLane(FallingObjectBigLane.Left));
             this.Controls.Add(fallingObject);
-        }
-
-        // Makes objects fall
-        private void TmrObjectFaller_Tick(object sender, EventArgs e)
-        {
-            foreach (var fallingObject in Game.Current.fallingObjects)
-            {
-                fallingObject.Top += fallingObject.Velocity;
-            }
         }
     }
 }

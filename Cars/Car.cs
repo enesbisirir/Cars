@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Cars
 {
-    class Car : PictureBox
+    class Car : PictureBox, IDisposable
     {
         public CarPosition CarPosition { get; set; }
         public CarType CarType { get; set; }
@@ -27,19 +27,7 @@ namespace Cars
             Velocity = 2;
             CarType = carType;
 
-            if (carType == CarType.Red)
-            {
-                Image = Properties.Resources.RedCar;
-                Location = new Point(Game.FirstLaneX - (Width / 2), Game.GroundY - Height - 10);
-                CarPosition = CarPosition.Left;
-            }
-
-            else if (carType == CarType.Yellow)
-            {
-                Image = Properties.Resources.YellowCar;
-                Location = new Point(Game.FourthLaneX - (Width / 2), Game.GroundY - Height - 10);
-                CarPosition = CarPosition.Right;
-            }
+            ResetPositions(this);
         }
 
         public void ChangeLane()
@@ -55,6 +43,23 @@ namespace Cars
             }
 
             tmrLaneChanger.Start();
+        }
+
+        public void ResetPositions(Car car)
+        {
+            if (car.CarType == CarType.Red)
+            {
+                Image = Properties.Resources.RedCar;
+                Location = new Point(Game.FirstLaneX - (Width / 2), Game.GroundY - Height - 10);
+                CarPosition = CarPosition.Left;
+            }
+
+            else if (car.CarType == CarType.Yellow)
+            {
+                Image = Properties.Resources.YellowCar;
+                Location = new Point(Game.FourthLaneX - (Width / 2), Game.GroundY - Height - 10);
+                CarPosition = CarPosition.Right;
+            }
         }
 
         private void tmrLaneChanger_Tick(object sender, EventArgs e)

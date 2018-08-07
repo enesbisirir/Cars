@@ -31,6 +31,7 @@
             this.LblMiddle = new System.Windows.Forms.Label();
             this.LblRight = new System.Windows.Forms.Label();
             this.LblLeft = new System.Windows.Forms.Label();
+            this.LblScore = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // LblMiddle
@@ -57,12 +58,24 @@
             this.LblLeft.Size = new System.Drawing.Size(3, 614);
             this.LblLeft.TabIndex = 0;
             // 
+            // LblScore
+            // 
+            this.LblScore.AutoSize = true;
+            this.LblScore.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.LblScore.ForeColor = System.Drawing.Color.White;
+            this.LblScore.Location = new System.Drawing.Point(427, 3);
+            this.LblScore.Name = "LblScore";
+            this.LblScore.Size = new System.Drawing.Size(24, 25);
+            this.LblScore.TabIndex = 4;
+            this.LblScore.Text = "0";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkBlue;
             this.ClientSize = new System.Drawing.Size(462, 613);
+            this.Controls.Add(this.LblScore);
             this.Controls.Add(this.LblMiddle);
             this.Controls.Add(this.LblLeft);
             this.Controls.Add(this.LblRight);
@@ -72,6 +85,7 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -80,6 +94,7 @@
         private System.Windows.Forms.Label LblMiddle;
         private System.Windows.Forms.Label LblRight;
         private System.Windows.Forms.Label LblLeft;
+        private System.Windows.Forms.Label LblScore;
     }
 }
 

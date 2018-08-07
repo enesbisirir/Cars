@@ -12,32 +12,27 @@ namespace Cars
     {
         public int Velocity { get; set; }
         public int SmallLane { get; set; }
-        public FallingObjectType ObjectType { get; set; }
+        public FallingObjectType Type { get; set; }
         public FallingObjectBigLane BigLane { get; set; }
-        public Timer TmrIntersectionChecker = new Timer() { Interval = 10 };
 
         public FallingObject(FallingObjectType objectType, int lane)
         {
-            // Event handler of intersection checker timer
-            TmrIntersectionChecker.Tick += TmrIntersectionChecker_Tick;
-            TmrIntersectionChecker.Start();
-
-            // Adds every object instantiated to the list
-            Game.Current.fallingObjects.Add(this);
+            // Adds every object spawned to the list
+            Game.Current.FallingObjects.Add(this);
 
             // Define properties of falling object
-            ObjectType = objectType;
+            Type = objectType;
             SmallLane = lane;
             Size = new Size(30, 30);
             SizeMode = PictureBoxSizeMode.Zoom;
             Velocity = 3;
 
             // Define type of object
-            if (ObjectType == FallingObjectType.Good)
+            if (Type == FallingObjectType.Good)
             {
                 Image = Properties.Resources.Star;
             }
-            else if (ObjectType == FallingObjectType.Bad)
+            else if (Type == FallingObjectType.Bad)
             {
                 Image = Properties.Resources.Bomb;
             }
@@ -64,15 +59,42 @@ namespace Cars
             }
         }
 
-        // Disposes FallingObject when it touches to the ground
-        private void TmrIntersectionChecker_Tick(object sender, EventArgs e)
+        /// <summary>
+        /// Checks if this object is touching to the ground
+        /// </summary>
+        /// <returns>True if touching, false if not</returns>
+        public bool IsTouchingToGround()
         {
             if (this.Top >= Game.GroundY - (Height / 2))
+                return true;
+            else
+                return false;
+        }
+
+        /// <summary>
+        /// Checks if this object is touching to a car
+        /// </summary>
+        /// <returns>True if touching, false if not</returns>
+        public bool IsTouchingToCar()
+        {
+            foreach (var car in Game.Current.Cars)
             {
-                this.Image = null;
-                this.TmrIntersectionChecker.Dispose();
-                this.Dispose();
+            if (this.Bounds.IntersectsWith(car.Bounds))
+                return true;
             }
+            return false;
+        }
+        
+        /// <summary>
+        /// Disposes this object's image and itself
+        /// </summary>
+        public void Destroy()
+        {
+            if (this.Image != null)
+                this.Image.Dispose();
+                
+            if (this != null)
+                this.Dispose();
         }
 
         /// <summary>
