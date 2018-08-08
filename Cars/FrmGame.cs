@@ -10,13 +10,12 @@ using System.Windows.Forms;
 
 namespace Cars
 {
-    public partial class Form1 : Form
+    public partial class FrmGame : Form
     {
-        // TODO: Randomized intervals
-        public static Timer TmrLeftObjectSpawner = new Timer() { Interval = 2000 };
-        public static Timer TmrRightObjectSpawner = new Timer() { Interval = 1800 };
+        public static Timer TmrLeftObjectSpawner = new Timer();
+        public static Timer TmrRightObjectSpawner = new Timer();
 
-        public Form1()
+        public FrmGame()
         {
             InitializeComponent();
 
@@ -26,7 +25,7 @@ namespace Cars
             Game.Current.Scored += OnScored;
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void FrmGame_Load(object sender, EventArgs e)
         {
             // Set position of lines
             LblMiddle.Left = (ClientSize.Width - LblMiddle.Width) / 2;
@@ -45,7 +44,7 @@ namespace Cars
 
         // TODO: Keys will not be hardcoded, 
         // user will be able to set keys on their own
-        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        private void FrmGame_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyValue == (char)Keys.A)
             {

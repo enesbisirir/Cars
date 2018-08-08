@@ -1,6 +1,6 @@
 ﻿namespace Cars
 {
-    partial class Form1
+    partial class FrmGame
     {
         /// <summary>
         /// Required designer variable.
@@ -69,7 +69,7 @@
             this.LblScore.TabIndex = 4;
             this.LblScore.Text = "0";
             // 
-            // Form1
+            // FrmGame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -80,10 +80,10 @@
             this.Controls.Add(this.LblLeft);
             this.Controls.Add(this.LblRight);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "Form1";
+            this.Name = "FrmGame";
             this.Text = "Cars";
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            this.Load += new System.EventHandler(this.FrmGame_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmGame_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

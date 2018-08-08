@@ -65,7 +65,7 @@ namespace Cars
         /// <returns>True if touching, false if not</returns>
         public bool IsTouchingToGround()
         {
-            if (this.Top >= Game.GroundY - (Height / 2))
+            if (this.Top >= Game.GroundY - Height)
                 return true;
             else
                 return false;

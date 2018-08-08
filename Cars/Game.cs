@@ -56,6 +56,9 @@ namespace Cars
             }
         }
 
+        /// <summary>
+        /// Called when good touches car or bad touches ground
+        /// </summary>
         public void Score(FallingObject fallingObject)
         {
             fallingObject.Destroy();
@@ -63,6 +66,9 @@ namespace Cars
             OnScored();
         }
 
+        /// <summary>
+        /// Called when good touches ground or bad touches car
+        /// </summary>
         public void Fail(FallingObject fallingObject)
         {
             Pause();
@@ -74,9 +80,11 @@ namespace Cars
         /// </summary>
         public void Start()
         {
+            RandomizeSpawnTimers();
+
             TmrGame.Start();
-            Form1.TmrLeftObjectSpawner.Start();
-            Form1.TmrRightObjectSpawner.Start();
+            FrmGame.TmrLeftObjectSpawner.Start();
+            FrmGame.TmrRightObjectSpawner.Start();
         }
 
         /// <summary>
@@ -85,8 +93,8 @@ namespace Cars
         public void Pause()
         {
             TmrGame.Stop();
-            Form1.TmrLeftObjectSpawner.Stop();
-            Form1.TmrRightObjectSpawner.Stop();
+            FrmGame.TmrLeftObjectSpawner.Stop();
+            FrmGame.TmrRightObjectSpawner.Stop();
         }
 
         /// <summary>
@@ -114,9 +122,11 @@ namespace Cars
             Start();
         }
 
+        /// <summary>
+        /// Pops up end game dialog
+        /// </summary>
         public void EndGame()
         {
-            // End game pop-up
             DialogResult dialogResult = MessageBox.Show("Your score is: " + Current.score + "\nDo you want to play again?", "Information", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
             // Restarts the game
@@ -126,6 +136,15 @@ namespace Cars
             // Ends the game
             else if (dialogResult == DialogResult.No)
                 Application.Exit();
+        }
+
+        /// <summary>
+        /// Randomizes interval of both object spawner timers
+        /// </summary>
+        public void RandomizeSpawnTimers()
+        {
+            FrmGame.TmrLeftObjectSpawner.Interval = Current.Random.Next(1800, 2000);
+            FrmGame.TmrRightObjectSpawner.Interval = Current.Random.Next(1800, 2000);
         }
 
         /// <summary>
