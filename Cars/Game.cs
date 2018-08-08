@@ -18,6 +18,8 @@ namespace Cars
         public Timer TmrGame = new Timer() { Interval = 1 };
         public int score { get; set; }
         public event EventHandler Scored;
+        public bool IsShieldActive { get; set; }
+        public DateTime ShieldTimer { get; set; }
 
         public Game()
         {
@@ -33,6 +35,7 @@ namespace Cars
             TmrGame.Tick += TmrGame_Tick;
         }
 
+        // Happens every milisecond when game is not paused
         private void TmrGame_Tick(object sender, EventArgs e)
         {
             // Falling object manipulations
@@ -42,22 +45,42 @@ namespace Cars
                 fallingObject.Top += fallingObject.Velocity;
 
                 // Check collision status and call related method
-                switch (CollisionStatus(fallingObject))
+                if (CollisionStatus(fallingObject) == CollisionType.GoodTouchesCar)
+                    Score(fallingObject);
+                else if (CollisionStatus(fallingObject) == CollisionType.BadTouchesGround)
+                    NoScore(fallingObject);
+                else if (CollisionStatus(fallingObject) == CollisionType.GoodTouchesGround)
+                    Fail(fallingObject);
+                else if (CollisionStatus(fallingObject) == CollisionType.BadTouchesCar)
                 {
-                    case CollisionType.GoodTouchesCar:
-                    case CollisionType.BadTouchesGround:
-                        Score(fallingObject);
-                        break;
-                    case CollisionType.GoodTouchesGround:
-                    case CollisionType.BadTouchesCar:
+                    if (Current.IsShieldActive == false)
                         Fail(fallingObject);
-                        break;
+                    else if (Current.IsShieldActive == true)
+                        NoScore(fallingObject);
                 }
+                else if (CollisionStatus(fallingObject) == CollisionType.ShieldTouchesCar)
+                    ShieldCollected(fallingObject);
+                else if (CollisionStatus(fallingObject) == CollisionType.ShieldTouchesGround)
+                    NoScore(fallingObject);
+            }
+
+            // Shield's stop condition(Lasts 5 seconds)
+            if (Current.IsShieldActive && (DateTime.UtcNow - Current.ShieldTimer).TotalSeconds >= 5)
+            {
+                ShieldCompleted();
             }
         }
 
         /// <summary>
-        /// Called when good touches car or bad touches ground
+        /// No reward for user, destroys given object
+        /// </summary>
+        public void NoScore(FallingObject fallingObject)
+        {
+            fallingObject.Destroy();
+        }
+
+        /// <summary>
+        /// Rewards player with a score, destroys given object
         /// </summary>
         public void Score(FallingObject fallingObject)
         {
@@ -67,12 +90,30 @@ namespace Cars
         }
 
         /// <summary>
-        /// Called when good touches ground or bad touches car
+        /// Pauses the game and brings end-game screen
         /// </summary>
         public void Fail(FallingObject fallingObject)
         {
             Pause();
             EndGame();
+        }
+
+        /// <summary>
+        /// Player will be immune to bombs for 3 second 
+        /// </summary>
+        public void ShieldCollected(FallingObject fallingObject)
+        {
+            Current.IsShieldActive = true;
+            Current.ShieldTimer = DateTime.UtcNow;
+            fallingObject.Destroy();
+        }
+
+        /// <summary>
+        /// Called when shield timer is over
+        /// </summary>
+        public void ShieldCompleted()
+        {
+            Current.IsShieldActive = false;
         }
 
         /// <summary>
@@ -148,18 +189,6 @@ namespace Cars
         }
 
         /// <summary>
-        /// Destroys given object
-        /// </summary>
-        public static void DestroyObject(FallingObject fallingObject)
-        {
-            if (fallingObject.Image != null)
-                fallingObject.Image.Dispose();
-
-            if (fallingObject != null)
-                fallingObject.Dispose();
-        }
-
-        /// <summary>
         /// Checks if there is any current collision in game
         /// </summary>
         /// <returns>Enum of type CollisionType</returns>
@@ -178,6 +207,13 @@ namespace Cars
                     return CollisionType.BadTouchesCar;
                 else if (fallingObject.IsTouchingToGround())
                     return CollisionType.BadTouchesGround;
+            }
+            else if (fallingObject.Type == FallingObjectType.Shield && fallingObject.Visible == true)
+            {
+                if (fallingObject.IsTouchingToCar())
+                    return CollisionType.ShieldTouchesCar;
+                else if (fallingObject.IsTouchingToGround())
+                    return CollisionType.ShieldTouchesGround;
             }
             return CollisionType.None;
         }

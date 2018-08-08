@@ -23,7 +23,8 @@ namespace Cars
     enum FallingObjectType
     {
         Good,
-        Bad
+        Bad,
+        Shield
     }
 
     enum FallingObjectBigLane
@@ -38,6 +39,8 @@ namespace Cars
         GoodTouchesCar,
         BadTouchesGround,
         BadTouchesCar,
+        ShieldTouchesCar,
+        ShieldTouchesGround,
         None
     }
 }

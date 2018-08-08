@@ -36,6 +36,10 @@ namespace Cars
             {
                 Image = Properties.Resources.Bomb;
             }
+            else if (Type == FallingObjectType.Shield)
+            {
+                Image = Properties.Resources.Shield;
+            }
 
             // Define big and small lanes of object
             switch (SmallLane)
@@ -103,14 +107,18 @@ namespace Cars
         /// <returns>Enum of FallingObjectType</returns>
         public static FallingObjectType RandomType()
         {
-            int randomHolder = Game.Current.Random.Next(1, 3);
-            if (randomHolder == 1)
+            int randomHolder = Game.Current.Random.Next(0, 105);
+            if (randomHolder <= 49)
             {
                 return FallingObjectType.Good;
             }
-            else
+            else if (randomHolder >= 50 && randomHolder <= 99)
             {
                 return FallingObjectType.Bad;
+            }
+            else
+            {
+                return FallingObjectType.Shield;
             }
         }
 
