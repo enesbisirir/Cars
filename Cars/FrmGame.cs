@@ -60,7 +60,7 @@ namespace Cars
         // Update UI when scored
         private void OnScored(object sender, EventArgs e)
         {
-            LblScore.Text = Game.Current.score.ToString();
+            LblScore.Text = Game.Current.CurrentScore.ToString();
         }
 
         // Spawn falling objects at right big lane

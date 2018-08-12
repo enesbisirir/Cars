@@ -9,21 +9,10 @@ namespace Cars
 {
     class Game
     {
-        public static Game Current = new Game();
-        public Car RedCar { get; set; }
-        public Car YellowCar { get; set; }
-        public List<FallingObject> FallingObjects = new List<FallingObject>();
-        public List<Car> Cars = new List<Car>();
-        public Random Random = new Random();
-        public Timer TmrGame = new Timer() { Interval = 1 };
-        public int score { get; set; }
-        public event EventHandler Scored;
-        public bool IsShieldActive { get; set; }
-        public DateTime ShieldTimer { get; set; }
-
+        #region Constructor
         public Game()
         {
-            score = 0;
+            CurrentScore = 0;
 
             // Create cars and add them to the list
             RedCar = new Car(CarType.Red);
@@ -34,43 +23,9 @@ namespace Cars
             // Event handler for main game timer
             TmrGame.Tick += TmrGame_Tick;
         }
+        #endregion
 
-        // Happens every milisecond when game is not paused
-        private void TmrGame_Tick(object sender, EventArgs e)
-        {
-            // Falling object manipulations
-            foreach (var fallingObject in FallingObjects)
-            {
-                // Make objects fall
-                fallingObject.Top += fallingObject.Velocity;
-
-                // Check collision status and call related method
-                if (CollisionStatus(fallingObject) == CollisionType.GoodTouchesCar)
-                    Score(fallingObject);
-                else if (CollisionStatus(fallingObject) == CollisionType.BadTouchesGround)
-                    NoScore(fallingObject);
-                else if (CollisionStatus(fallingObject) == CollisionType.GoodTouchesGround)
-                    Fail(fallingObject);
-                else if (CollisionStatus(fallingObject) == CollisionType.BadTouchesCar)
-                {
-                    if (Current.IsShieldActive == false)
-                        Fail(fallingObject);
-                    else if (Current.IsShieldActive == true)
-                        NoScore(fallingObject);
-                }
-                else if (CollisionStatus(fallingObject) == CollisionType.ShieldTouchesCar)
-                    ShieldCollected(fallingObject);
-                else if (CollisionStatus(fallingObject) == CollisionType.ShieldTouchesGround)
-                    NoScore(fallingObject);
-            }
-
-            // Shield's stop condition(Lasts 5 seconds)
-            if (Current.IsShieldActive && (DateTime.UtcNow - Current.ShieldTimer).TotalSeconds >= 5)
-            {
-                ShieldCompleted();
-            }
-        }
-
+        #region In game collection methods
         /// <summary>
         /// No reward for user, destroys given object
         /// </summary>
@@ -85,8 +40,8 @@ namespace Cars
         public void Score(FallingObject fallingObject)
         {
             fallingObject.Destroy();
-            score++;
-            OnScored();
+            CurrentScore++;
+            Scored(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -115,7 +70,9 @@ namespace Cars
         {
             Current.IsShieldActive = false;
         }
+        #endregion
 
+        #region Game start, pause, restart, end methods
         /// <summary>
         /// Starts the game
         /// </summary>
@@ -156,8 +113,8 @@ namespace Cars
             }
 
             // Reset score and publish event for it
-            Current.score = 0;
-            OnScored();
+            Current.CurrentScore = 0;
+            Scored(this, EventArgs.Empty);
 
             // Start timers
             Start();
@@ -168,7 +125,7 @@ namespace Cars
         /// </summary>
         public void EndGame()
         {
-            DialogResult dialogResult = MessageBox.Show("Your score is: " + Current.score + "\nDo you want to play again?", "Information", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            DialogResult dialogResult = MessageBox.Show("Your score is: " + Current.CurrentScore + "\nDo you want to play again?", "Information", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
             // Restarts the game
             if (dialogResult == DialogResult.Yes)
@@ -177,6 +134,44 @@ namespace Cars
             // Ends the game
             else if (dialogResult == DialogResult.No)
                 Application.Exit();
+        }
+        #endregion
+
+        #region Game mechanics
+        // Happens every milisecond when game is not paused
+        private void TmrGame_Tick(object sender, EventArgs e)
+        {
+            // Falling object manipulations
+            foreach (var fallingObject in FallingObjects)
+            {
+                // Make objects fall
+                fallingObject.Top += fallingObject.Velocity;
+
+                // Check collision status and call related method
+                if (CollisionStatus(fallingObject) == CollisionType.GoodTouchesCar)
+                    Score(fallingObject);
+                else if (CollisionStatus(fallingObject) == CollisionType.BadTouchesGround)
+                    NoScore(fallingObject);
+                else if (CollisionStatus(fallingObject) == CollisionType.GoodTouchesGround)
+                    Fail(fallingObject);
+                else if (CollisionStatus(fallingObject) == CollisionType.BadTouchesCar)
+                {
+                    if (Current.IsShieldActive == false)
+                        Fail(fallingObject);
+                    else if (Current.IsShieldActive == true)
+                        NoScore(fallingObject);
+                }
+                else if (CollisionStatus(fallingObject) == CollisionType.ShieldTouchesCar)
+                    ShieldCollected(fallingObject);
+                else if (CollisionStatus(fallingObject) == CollisionType.ShieldTouchesGround)
+                    NoScore(fallingObject);
+            }
+
+            // Shield's stop condition(Lasts 5 seconds)
+            if (Current.IsShieldActive && (DateTime.UtcNow - Current.ShieldTimer).TotalSeconds >= 5)
+            {
+                ShieldCompleted();
+            }
         }
 
         /// <summary>
@@ -217,17 +212,29 @@ namespace Cars
             }
             return CollisionType.None;
         }
+        #endregion
 
-        protected virtual void OnScored()
-        {
-            Scored?.Invoke(this, EventArgs.Empty);
-        }
+        #region Variables
+        public static Game Current = new Game();
+        public Car RedCar { get; set; }
+        public Car YellowCar { get; set; }
+        public List<FallingObject> FallingObjects = new List<FallingObject>();
+        public List<Car> Cars = new List<Car>();
+        public Random Random = new Random();
+        public Timer TmrGame = new Timer() { Interval = 1 };
+        public int CurrentScore { get; set; }
+        public event EventHandler Scored;
+        public bool IsShieldActive { get; set; }
+        public DateTime ShieldTimer { get; set; }
+        #endregion
 
+        #region Constants
         // Remember vital positions
-        public static int FirstLaneX { get { return (346 / 8); } }
-        public static int SecondLaneX { get { return 3 * (346 / 8); } }
-        public static int ThirdLaneX { get { return 5 * (346 / 8); } }
-        public static int FourthLaneX { get { return 7 * (346 / 8); } }
-        public static int GroundY { get { return 498; } }
+        public const int FirstLaneX = 346 / 8;
+        public const int SecondLaneX = 3 * 346 / 8;
+        public const int ThirdLaneX = 5 * 346 / 8;
+        public const int FourthLaneX = 7 * 346 / 8;
+        public const int GroundY = 498;
+        #endregion
     }
 }
